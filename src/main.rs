@@ -27,7 +27,7 @@ fn main() {
     let mut chars_type = String::from("base58");
     let mut password_count = 1u32;
     let mut password_length = 12u8;
-    {  // this block limits scope of borrows by ap.refer() method
+    {
         let mut ap = ArgumentParser::new();
         ap.set_description("makepassword - command line makepassword tool.");
         ap.refer(&mut password_count).add_option(&["-c", "--count"], Store, "Password count, default 1");
