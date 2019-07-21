@@ -14,9 +14,9 @@ const CHARS_SYMBOL: &str = "-_.|!@#$%^&*()+=[]{};:<>";
 
 fn print_version() {
     print!(r#"makepassword {}
-
 Copyright (C) 2019 Hatter Jiang.
 License MIT <https://opensource.org/licenses/MIT>
+
 Written by Hatter Jiang
 "#, VERSION);
 }
