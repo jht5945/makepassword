@@ -1,6 +1,14 @@
-# makepassword
+## makepassword
 
 
+#### Intall
+
+```
+cargo install --git https://github.com/jht5945/makepassword
+```
+
+
+#### Usage
 ```
 $ makepassword -h
 Usage:
