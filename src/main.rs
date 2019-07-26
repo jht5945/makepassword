@@ -21,60 +21,70 @@ Written by Hatter Jiang
 "#, VERSION);
 }
 
+struct Options {
+    version: bool,
+    chars: String,
+    chars_type: String,
+    password_count: u32,
+    password_length: u8,
+}
+
 fn main() {
-    let mut version = false;
-    let mut chars = String::new();
-    let mut chars_type = String::from("base58");
-    let mut password_count = 1u32;
-    let mut password_length = 12u8;
+    let mut options = Options {
+        version: false,
+        chars: String::new(),
+        chars_type: String::from("base58"),
+        password_count: 1u32,
+        password_length: 12u8,
+    };
     {
         let mut ap = ArgumentParser::new();
         ap.set_description("makepassword - command line makepassword tool.");
-        ap.refer(&mut password_count).add_option(&["-c", "--count"], Store, "Password count, default 1");
-        ap.refer(&mut password_length).add_option(&["-l", "--length"], Store, "Password length, default 12");
-        ap.refer(&mut chars).add_option(&["--chars"], Store, "Chars, default use -t/--type base58");
-        ap.refer(&mut chars_type).add_option(&["-t", "--type"], Store, "Type, base58(default), alphabet, word, all");
-        ap.refer(&mut version).add_option(&["-v", "--version"], StoreTrue, "Print version");
+        ap.refer(&mut options.password_count).add_option(&["-c", "--count"], Store, "Password count, default 1");
+        ap.refer(&mut options.password_length).add_option(&["-l", "--length"], Store, "Password length, default 12");
+        ap.refer(&mut options.chars).add_option(&["--chars"], Store, "Chars, default use -t/--type base58");
+        ap.refer(&mut options.chars_type).add_option(&["-t", "--type"], Store, "Type, base58(default), alphabet, word, all");
+        ap.refer(&mut options.version).add_option(&["-v", "--version"], StoreTrue, "Print version");
         ap.parse_args_or_exit();
     }
     
-    if version {
+    if options.version {
         print_version();
         return;
     }
 
-    if password_count < 1 || password_count > 100 {
-        print_message(MessageType::ERROR, &format!("Invalid count: {}", password_count));
+    if options.password_count < 1 || options.password_count > 100 {
+        print_message(MessageType::ERROR, &format!("Invalid count: {}", options.password_count));
         return;
     }
 
-    if password_length < 1 || password_length > 100 {
-        print_message(MessageType::ERROR, &format!("Invalid length: {}", password_length));
+    if options.password_length < 1 || options.password_length > 100 {
+        print_message(MessageType::ERROR, &format!("Invalid length: {}", options.password_length));
         return;
     }
 
-    if chars.len() > 0 && chars.len() < 8 {
-        print_message(MessageType::ERROR, &format!("Chars too small: {}", &chars));
+    if options.chars.len() > 0 && options.chars.len() < 8 {
+        print_message(MessageType::ERROR, &format!("Chars too small: {}", &options.chars));
         return;
     }
 
-    let chars_source: &str = & match chars.len() {
-        0 => match chars_type.as_str() {
+    let chars_source: &str = & match options.chars.len() {
+        0 => match options.chars_type.as_str() {
             "base58" => String::from(CHARS_BASE58),
             "alphabet" => [CHARS_LOWER_CASE, CHARS_UPPER_CASE].join(""),
             "word" => [CHARS_DIGITALS, CHARS_LOWER_CASE, CHARS_UPPER_CASE].join(""),
             "all" => [CHARS_DIGITALS, CHARS_LOWER_CASE, CHARS_UPPER_CASE, CHARS_SYMBOL].join(""),
             _ => {
-                print_message(MessageType::ERROR, &format!("Unknown type: {}", chars_type));
+                print_message(MessageType::ERROR, &format!("Unknown type: {}", options.chars_type));
                 return;
             },
         },
-        _ => chars,
+        _ => options.chars,
     };
 
-    for _ in 0..password_count {
+    for _ in 0..options.password_count {
         let mut password = String::new();
-        for _ in 0..password_length {
+        for _ in 0..options.password_length {
             let p = rand::random::<usize>() % chars_source.len();
             password.push_str(&chars_source[p..p+1]);
         }
