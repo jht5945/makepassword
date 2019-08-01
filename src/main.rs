@@ -5,20 +5,22 @@ extern crate rust_util;
 use argparse::{ArgumentParser, StoreTrue, Store};
 use rust_util::*;
 
-const VERSION: &str = "0.1";
 const CHARS_DIGITALS: &str = "1234567890";
 const CHARS_LOWER_CASE: &str = "abcdefghijklmnopqrstuvwxyz";
 const CHARS_UPPER_CASE: &str = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 const CHARS_BASE58: &str = "123456789abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ";
 const CHARS_SYMBOL: &str = "-_.|!@#$%^&*()+=[]{};:<>";
 
+const VERSION: &str = env!("CARGO_PKG_VERSION");
+const GIT_HASH: &str = env!("GIT_HASH");
+
 fn print_version() {
-    print!(r#"makepassword {}
+    print!(r#"makepassword {} - {}
 Copyright (C) 2019 Hatter Jiang.
 License MIT <https://opensource.org/licenses/MIT>
 
 Written by Hatter Jiang
-"#, VERSION);
+"#, VERSION, &GIT_HASH[0..7]);
 }
 
 struct Options {
