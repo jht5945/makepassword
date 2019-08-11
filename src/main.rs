@@ -74,11 +74,11 @@ fn main() {
 
     let chars_source: &str = & match options.chars.len() {
         0 => match options.chars_type.as_str() {
-            "base58" => String::from(CHARS_BASE58),
+            "base58"   => String::from(CHARS_BASE58),
             "alphabet" => [CHARS_LOWER_CASE, CHARS_UPPER_CASE].join(""),
-            "word" => [CHARS_DIGITALS, CHARS_LOWER_CASE, CHARS_UPPER_CASE].join(""),
-            "all" => [CHARS_DIGITALS, CHARS_LOWER_CASE, CHARS_UPPER_CASE, CHARS_SYMBOL].join(""),
-            _ => {
+            "word"     => [CHARS_DIGITALS, CHARS_LOWER_CASE, CHARS_UPPER_CASE].join(""),
+            "all"      => [CHARS_DIGITALS, CHARS_LOWER_CASE, CHARS_UPPER_CASE, CHARS_SYMBOL].join(""),
+            _          => {
                 print_message(MessageType::ERROR, &format!("Unknown type: {}", options.chars_type));
                 return;
             },
