@@ -3,7 +3,9 @@ extern crate rand;
 extern crate rust_util;
 
 use argparse::{ArgumentParser, StoreTrue, Store};
-use rust_util::*;
+use rust_util::{
+    util_msg::*,
+};
 
 const CHARS_DIGITALS: &str = "1234567890";
 const CHARS_LOWER_CASE: &str = "abcdefghijklmnopqrstuvwxyz";
