@@ -1,11 +1,9 @@
 extern crate argparse;
 extern crate rand;
+#[macro_use]
 extern crate rust_util;
 
-use argparse::{ArgumentParser, StoreTrue, Store};
-use rust_util::{
-    util_msg::*,
-};
+use argparse::{ ArgumentParser, StoreTrue, Store };
 
 const CHARS_DIGITALS: &str = "1234567890";
 const CHARS_LOWER_CASE: &str = "abcdefghijklmnopqrstuvwxyz";
@@ -18,7 +16,7 @@ const GIT_HASH: &str = env!("GIT_HASH");
 
 fn print_version() {
     print!(r#"makepassword {} - {}
-Copyright (C) 2019 Hatter Jiang.
+Copyright (C) 2019-2020 Hatter Jiang.
 License MIT <https://opensource.org/licenses/MIT>
 
 Written by Hatter Jiang
@@ -58,17 +56,17 @@ fn main() {
     }
 
     if options.password_count < 1 || options.password_count > 100 {
-        print_message(MessageType::ERROR, &format!("Invalid count: {}", options.password_count));
+        failure!("Invalid count: {}", options.password_count);
         return;
     }
 
     if options.password_length < 1 || options.password_length > 100 {
-        print_message(MessageType::ERROR, &format!("Invalid length: {}", options.password_length));
+        failure!("Invalid length: {}", options.password_length);
         return;
     }
 
-    if options.chars.len() > 0 && options.chars.len() < 8 {
-        print_message(MessageType::ERROR, &format!("Chars too small: {}", &options.chars));
+    if !options.chars.is_empty() && options.chars.len() < 8 {
+        failure!("Chars too small: {}", &options.chars);
         return;
     }
 
@@ -79,7 +77,7 @@ fn main() {
             "word"     => [CHARS_DIGITALS, CHARS_LOWER_CASE, CHARS_UPPER_CASE].join(""),
             "all"      => [CHARS_DIGITALS, CHARS_LOWER_CASE, CHARS_UPPER_CASE, CHARS_SYMBOL].join(""),
             _          => {
-                print_message(MessageType::ERROR, &format!("Unknown type: {}", options.chars_type));
+                failure!("Unknown type: {}", options.chars_type);
                 return;
             },
         },
