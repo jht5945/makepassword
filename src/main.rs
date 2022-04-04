@@ -3,7 +3,7 @@ extern crate rand;
 #[macro_use]
 extern crate rust_util;
 
-use argparse::{ ArgumentParser, StoreTrue, Store };
+use argparse::{ArgumentParser, Store, StoreTrue};
 
 const CHARS_DIGITALS: &str = "1234567890";
 const CHARS_LOWER_CASE: &str = "abcdefghijklmnopqrstuvwxyz";
@@ -16,7 +16,7 @@ const GIT_HASH: &str = env!("GIT_HASH");
 
 fn print_version() {
     print!(r#"makepassword {} - {}
-Copyright (C) 2019-2020 Hatter Jiang.
+Copyright (C) 2019-2022 Hatter Jiang.
 License MIT <https://opensource.org/licenses/MIT>
 
 Written by Hatter Jiang
@@ -45,11 +45,11 @@ fn main() {
         ap.refer(&mut options.password_count).add_option(&["-c", "--count"], Store, "Password count, default 1");
         ap.refer(&mut options.password_length).add_option(&["-l", "--length"], Store, "Password length, default 12");
         ap.refer(&mut options.chars).add_option(&["--chars"], Store, "Chars, default use -t/--type base58");
-        ap.refer(&mut options.chars_type).add_option(&["-t", "--type"], Store, "Type, base58(default), alphabet, word, all");
+        ap.refer(&mut options.chars_type).add_option(&["-t", "--type"], Store, "Type, base58(default, b58, b), alphabet(a), word(w), all(A)");
         ap.refer(&mut options.version).add_option(&["-v", "--version"], StoreTrue, "Print version");
         ap.parse_args_or_exit();
     }
-    
+
     if options.version {
         print_version();
         return;
@@ -70,16 +70,16 @@ fn main() {
         return;
     }
 
-    let chars_source: &str = & match options.chars.len() {
+    let chars_source: &str = &match options.chars.len() {
         0 => match options.chars_type.as_str() {
-            "base58"   => String::from(CHARS_BASE58),
-            "alphabet" => [CHARS_LOWER_CASE, CHARS_UPPER_CASE].join(""),
-            "word"     => [CHARS_DIGITALS, CHARS_LOWER_CASE, CHARS_UPPER_CASE].join(""),
-            "all"      => [CHARS_DIGITALS, CHARS_LOWER_CASE, CHARS_UPPER_CASE, CHARS_SYMBOL].join(""),
-            _          => {
+            "base58" | "b58" | "b" => String::from(CHARS_BASE58),
+            "alphabet" | "a" => [CHARS_LOWER_CASE, CHARS_UPPER_CASE].join(""),
+            "word" | "w" => [CHARS_DIGITALS, CHARS_LOWER_CASE, CHARS_UPPER_CASE].join(""),
+            "all" | "A" => [CHARS_DIGITALS, CHARS_LOWER_CASE, CHARS_UPPER_CASE, CHARS_SYMBOL].join(""),
+            _ => {
                 failure!("Unknown type: {}", options.chars_type);
                 return;
-            },
+            }
         },
         _ => options.chars,
     };
@@ -88,7 +88,7 @@ fn main() {
         let mut password = String::new();
         for _ in 0..options.password_length {
             let p = rand::random::<usize>() % chars_source.len();
-            password.push_str(&chars_source[p..p+1]);
+            password.push_str(&chars_source[p..p + 1]);
         }
         println!("{}", password);
     }
