@@ -21,7 +21,8 @@ Optional arguments:
   -c,--count COUNT      Password count, default 1
   -l,--length LENGTH    Password length, default 12
   --chars CHARS         Chars, default use -t/--type base58
-  -t,--type TYPE        Type, base58(default), alphabet, word, all
+  -t,--type TYPE        Type, base58(default, b58, b), alphabet(a), word(w),
+                        all(A)
   -v,--version          Print version
 ```
 
